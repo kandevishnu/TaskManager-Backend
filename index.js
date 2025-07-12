@@ -16,7 +16,7 @@ console.log("Server starting...");
 dotenv.config()
 const server = express();
 server.use(cors({
-  origin: "https://taskmanagerbyvishnu.vercel.app/",
+  origin: "https://taskmanagerbyvishnu.vercel.app",
   credentials: true,
 }));
 server.use(express.json());
