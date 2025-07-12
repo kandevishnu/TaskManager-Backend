@@ -6,5 +6,8 @@ const router = express.Router();
 
 router.post("/login", login);
 router.post("/logout", verifyToken, logout);
+router.get("/test", (req, res) => {
+  res.status(200).send("✅ Auth route is working!");
+});
 
 export default router;
