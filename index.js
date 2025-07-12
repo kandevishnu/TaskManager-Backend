@@ -11,6 +11,7 @@ import user from "./routes/userRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import otpRoutes from "./routes/otpRoutes.js";
 
+console.log("Server starting...");
 
 dotenv.config()
 const server = express();
