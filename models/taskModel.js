@@ -41,7 +41,7 @@ const taskSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    checklist: [checklistItemSchema], // array of checklist items
+    checklist: [checklistItemSchema], 
     status: {
       type: String,
       enum: ["pending", "in progress", "completed"],

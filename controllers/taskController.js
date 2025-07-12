@@ -9,13 +9,11 @@ const determineStatus = (checklist) => {
   return "in progress";
 };
 
-// @desc Create a new task
 export const createTask = async (req, res) => {
   const { title, description, priority, dueDate, checklist } = req.body;
   const userId = req.user.id;
 
   try {
-    // If checklist is missing or empty, use title as single checklist item
     const processedChecklist =
       checklist && checklist.length > 0
         ? checklist
@@ -103,10 +101,9 @@ export const deleteTask = async (req, res) => {
   }
 };
 
-// @desc Get tasks by status
 export const getTasksByStatus = async (req, res) => {
   const userId = req.user.id;
-  const { status } = req.query; // status = 'pending' | 'in progress' | 'completed'
+  const { status } = req.query; 
 
   try {
     if (!["pending", "in progress", "completed"].includes(status)) {

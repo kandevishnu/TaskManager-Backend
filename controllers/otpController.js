@@ -4,14 +4,12 @@ import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
 
 
-// OTP generator
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 export const sendOtp = async (req, res) => {
   const { name, email, gender, password } = req.body;
 
   try {
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
@@ -19,10 +17,8 @@ export const sendOtp = async (req, res) => {
 
     const otpCode = generateOTP();
 
-    // Save OTP
     await OTP.create({ email, otp: otpCode });
 
-    // Send email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -66,10 +62,8 @@ export const sendOtp = async (req, res) => {
 });
 
 
-    // Hash password here, so frontend never sees plain text
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ Send tempUser back to store in localStorage
     res.status(200).json({
       message: "OTP sent to email",
       tempUser: {
@@ -96,7 +90,6 @@ export const verifyOtp = async (req, res) => {
 
     await OTP.deleteMany({ email });
 
-    // Check again to be safe
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });

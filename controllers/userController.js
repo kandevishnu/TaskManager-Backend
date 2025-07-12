@@ -1,10 +1,10 @@
-import User from "../models/userModel.js"; // adjust path as needed
+import User from "../models/userModel.js"; 
 import bcrypt from "bcryptjs";
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find(); // fetches all users
-    res.status(200).json({users: users, length: users.length});     // sends back user list
+    const users = await User.find(); 
+    res.status(200).json({users: users, length: users.length});
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ message: "Internal server error" });
