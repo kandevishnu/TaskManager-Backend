@@ -13,6 +13,23 @@ export const createTask = async (req, res) => {
   const { title, description, priority, dueDate, checklist } = req.body;
   const userId = req.user.id;
 
+  if (!title || title.trim().length < 3) {
+    return res.status(400).json({ message: "Title must be at least 3 characters" });
+  }
+
+  if (!description || description.trim().length < 5) {
+    return res.status(400).json({ message: "Please enter a task description" });
+  }
+
+  const allowedPriorities = ["low", "medium", "high"];
+  if (!allowedPriorities.includes(priority)) {
+    return res.status(400).json({ message: "Invalid priority selected" });
+  }
+
+  if (!dueDate || isNaN(Date.parse(dueDate))) {
+    return res.status(400).json({ message: "Invalid due date" });
+  }
+
   try {
     const processedChecklist =
       checklist && checklist.length > 0
@@ -32,14 +49,12 @@ export const createTask = async (req, res) => {
     });
 
     await newTask.save();
-
     res.status(201).json({ message: "Task created successfully", task: newTask });
   } catch (error) {
     console.error("Error creating task:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 export const getTasks = async (req, res) => {
   const userId = req.user.id;
@@ -57,6 +72,22 @@ export const updateTask = async (req, res) => {
   const { id } = req.params;
   const { title, description, priority, dueDate, checklist } = req.body;
 
+  if (title && title.trim().length < 3) {
+    return res.status(400).json({ message: "Title must be at least 3 characters" });
+  }
+
+  if (description && description.trim().length < 5) {
+    return res.status(400).json({ message: "Description must be at least 5 characters" });
+  }
+
+  if (priority && !["low", "medium", "high"].includes(priority)) {
+    return res.status(400).json({ message: "Invalid priority" });
+  }
+
+  if (dueDate && isNaN(Date.parse(dueDate))) {
+    return res.status(400).json({ message: "Invalid due date" });
+  }
+
   try {
     const status = checklist ? determineStatus(checklist) : undefined;
 
@@ -68,7 +99,7 @@ export const updateTask = async (req, res) => {
         priority,
         dueDate,
         checklist,
-        ...(status && { status }), 
+        ...(status && { status }),
       },
       { new: true }
     );
@@ -103,7 +134,7 @@ export const deleteTask = async (req, res) => {
 
 export const getTasksByStatus = async (req, res) => {
   const userId = req.user.id;
-  const { status } = req.query; 
+  const { status } = req.query;
 
   try {
     if (!["pending", "in progress", "completed"].includes(status)) {
